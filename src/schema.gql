@@ -1,0 +1,77 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateTaskInput {
+  name: String!
+}
+
+input GetMails {
+  limit: Int!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+type MailOutput {
+  hi: String!
+}
+
+type Mutation {
+  createTask(createTaskInput: CreateTaskInput!): ResponseTask!
+  getEmails(getMails: GetMails!): MailOutput!
+  login(loginUserInput: LoginUserInput!): Response!
+  removeTask(id: Int!): ResponseTask!
+  removeUser: Response!
+  saveDraft(saveDraft: SaveDraft!): MailOutput!
+  sendMail(sendMail: SendMail!): MailOutput!
+  signup(signupUserInput: SignupUserInput!): Response!
+  updateTask(updateTaskInput: UpdateTaskInput!): ResponseTask!
+}
+
+type Query {
+  findAllTask: [ResponseTask!]!
+  findOneTask(id: Int!): ResponseTask!
+}
+
+type Response {
+  access_token: String
+  user: User
+}
+
+type ResponseTask {
+  id: Int!
+  name: String!
+  userId: Int!
+}
+
+input SaveDraft {
+  body: String!
+  subject: String!
+}
+
+input SendMail {
+  body: String!
+  subject: String!
+}
+
+input SignupUserInput {
+  age: Int
+  email: String!
+  password: String!
+  username: String!
+}
+
+input UpdateTaskInput {
+  id: Int!
+  name: String!
+}
+
+type User {
+  access_token: String
+  age: Int!
+  email: String!
+  username: String!
+}
