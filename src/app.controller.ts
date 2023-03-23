@@ -23,8 +23,6 @@ private loginEmail ;
   @Post()
   async gettoken(@Req() req, @Res() res:Response ){
 
-  
-     
     if(req.body.token){
 
       console.log(req.body.token);
@@ -36,8 +34,6 @@ private loginEmail ;
       const userKey = req.body.token.emailAddress ;
     
        const mail = await redisClient.get('id');
-     //const mail =await this.userService.getEmail()
-      //console.log(mail.e)
 
       if(mail===userKey){
 
@@ -46,23 +42,6 @@ private loginEmail ;
               access_token : req.body.token.accessToken
         })
 
-        //   console.log(res)
-        // try{
-      
-        //   const url = 'https://f9eb-27-109-3-34.in.ngrok.io';
-        //   const value = this.token;
-
-        //   const response =  await this.httpService.post(url, {value});
-
-        //     await firstValueFrom(response);
-        //     // console.log(res1);
-        //    }
-      
-        //    catch(error)
-        //    {
-        //         console.log(error);
-        //    } 
-        // console.log('user found in redis')
         
       }
       else{

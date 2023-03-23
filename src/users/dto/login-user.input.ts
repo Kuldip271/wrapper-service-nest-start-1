@@ -8,6 +8,4 @@ export class LoginUserInput{
     @IsEmail({},{message:"email is not valid"})
     email:string
 
-    @Field()
-    password:string
 }

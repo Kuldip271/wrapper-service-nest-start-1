@@ -5,5 +5,8 @@ import { User } from '@prisma/client';
 export class CreateTaskInput {
   @Field()
    name:string
+
+   @Field(()=>Int)
+   userId: number
  
 }

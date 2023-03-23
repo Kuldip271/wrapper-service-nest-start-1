@@ -33,7 +33,7 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService, private taskService: TasksService, private readonly redisService: RedisService, private readonly httpService: HttpService) { }
 
   @Mutation(() => Response)
-  async signup(@Args('signupUserInput') signupUserInput: SignupUserInput) {
+   signup(@Args('signupUserInput') signupUserInput: SignupUserInput) {
     return this.usersService.signup(signupUserInput)
 
   }
@@ -41,76 +41,24 @@ export class UsersResolver {
   @Mutation(() => Response)
   async login(@Args('loginUserInput') loginUserInput: LoginUserInput) {
 
+    
      const redisClient = this.redisService.getClient();
 
     this.testemail = loginUserInput.email;
     await redisClient.set('id',this.testemail);
-   // await this.usersService.setEmail(this.testemail)
-    // const userExists = await redisClient.exists(userKey);
-
-    //  console.log(userExists)
-
-    // if (!userExists) {
-    //   console.time('dbtimer')
-
-    //   const user = await this.usersService.login(loginUserInput);
-
-    //   console.timeEnd('dbtimer')
-
-
-    //   // Store the user's data in Redis
-    //   await redisClient.hmset(userKey, {
-    //     username: user.user.username,
-    //     age: user.user.age,
-    //     id : user.user.id,
-    //     access_token : user.access_token
-
-    //   });
-    //   console.log(userKey)
-
-    //   return user;
-    // }
-    // else{
-    //   // console.log( userExists);
-    //   console.time('redistimer')
-
-    //   const userfromredis = await redisClient.hmget(userKey,'username','age', 'id', 'access_token');
-
-    //   console.timeEnd('redistimer')
-
-    //    console.log(userfromredis)
-
-
-    //    const user = {
-
-    //      username : userfromredis[0],
-    //      email : userKey,
-    //      age : userfromredis[1],
-    //     //  id : userfromredis[2],
-    //      access_token : userfromredis[3] 
-    //    }
-
-    //   return {user};
-
-    //   // return {userfromredis};
-    // }
-
-    //////////////////////////////////////////////////////////////////
-    // const redisClient = this.redisService.getClient();
+   
     const userKey = loginUserInput.email;
-    //  console.log(userKey)
+    
     await redisClient.hmset(userKey, {
       email: loginUserInput.email
 
     })
     try {
 
-      // console.log(response)
-
-      const url = 'https://9ffa-61-12-85-170.in.ngrok.io';
+      const url = process.env.NGROK_URL;
       const response = await this.httpService.post(url, { data: loginUserInput.email });
       await firstValueFrom(response);
-      // console.log(res1);
+      
     }
 
     catch (error) {
@@ -127,36 +75,36 @@ export class UsersResolver {
   @Mutation(() => ResponseTask)
   createTask(@Args('createTaskInput') createTaskInput: CreateTaskInput, @Context() context) {
     // console.log({context})
-    return this.taskService.create(createTaskInput, context?.req?.user?.id);
+    return this.taskService.create(createTaskInput);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(MutationGuard)
   @Mutation(() => ResponseTask)
   updateTask(@Args('updateTaskInput') updateTaskInput: UpdateTaskInput) {
     return this.taskService.update(updateTaskInput.id, updateTaskInput);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(MutationGuard)
   @Mutation(() => ResponseTask)
   removeTask(@Args('id', { type: () => Int }) id: number) {
     return this.taskService.remove(id);
   }
-
-  @UseGuards(JwtAuthGuard)
+  
+  @UseGuards(MutationGuard)
   @Mutation(() => Response)
   removeUser(@Context() context) {
 
     return this.usersService.remove(context?.req?.user?.id);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(MutationGuard)
   @Query(() => [ResponseTask])
   findAllTask(@Context() context) {
-    return this.taskService.findAll(context?.req?.user?.id);
+    return this.taskService.findAll();
   }
 
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(MutationGuard)
   @Query(() => ResponseTask)
   findOneTask(@Args('id', { type: () => Int }) id: number) {
     return this.taskService.findOne(id);
@@ -180,7 +128,7 @@ export class UsersResolver {
           to : data[0]
         }
 
-        const url = 'https://9ffa-61-12-85-170.in.ngrok.io/sendMail';
+        const url = `${process.env.NGROK_URL}/sendMail`;
         
         const response = await this.httpService.post(url, { mailbody,token:data[1] });
         
@@ -212,7 +160,7 @@ export class UsersResolver {
 
       if (data[1]) {
 
-        const url = 'https://9ffa-61-12-85-170.in.ngrok.io/getMails';
+        const url = `${process.env.NGROK_URL}/getMails`;
         
         const response = await this.httpService.post(url, { limit:getMails.limit,token:data[1] });
         
@@ -249,7 +197,7 @@ export class UsersResolver {
           to : data[0]
         }
 
-        const url = 'https://9ffa-61-12-85-170.in.ngrok.io/saveDraft';
+        const url = `${process.env.NGROK_URL}/saveDraft`;
         
         const response = await this.httpService.post(url, { mailbody,token:data[1] });
         
@@ -258,12 +206,12 @@ export class UsersResolver {
         
       }
 
-      console.log({message : "Send email and access_token sent!!!" })
+      console.log({message : "Save Mail in Draft !!" })
       
     }
 
 
-    return { hi: "Send email and access_token sent!!!" }
+    return { hi: "Save Mail in Draft !!" }
 
 
   }

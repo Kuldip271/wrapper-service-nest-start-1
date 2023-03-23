@@ -7,11 +7,11 @@ import { UpdateTaskInput } from './dto/update-task.input';
 export class TasksService {
     constructor(private prisma:PrismaService){}
 
-  create(createTaskInput: CreateTaskInput,id:number) {
+  create(createTaskInput: CreateTaskInput) {
     return this.prisma.task.create({
       data:{
         name:createTaskInput.name,
-        userId:id
+        userId:createTaskInput.userId
       }
     });
   }
@@ -37,10 +37,10 @@ export class TasksService {
   }
 
 
-  findAll(id:number) {
+  findAll() {
     return this.prisma.task.findMany({
       where:{
-        userId:id,
+        
       },
       include:{
         user:true

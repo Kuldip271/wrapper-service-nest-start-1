@@ -13,15 +13,16 @@ export class MutationGuard implements CanActivate {
     const redisClient = this.redisService.getClient();
 
     const mail = await redisClient.get('id');
-    // const request = context.switchToHttp().getRequest();
-    const data = redisClient.hmget(mail,'email','access_token')
+   
+    const data = await redisClient.hmget(mail,'email','access_token')
+   
     if(data[0] && data[1])
     {
         return true;
     }
     
 
-    // Your guard logic here
-    return false; // or false depending on the result of the guard logic
+    
+    return false; 
   }
 }

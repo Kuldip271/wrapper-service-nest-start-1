@@ -26,20 +26,20 @@ export class UsersService {
       }
 
       
-      const pass = await bcrypt.hash(signupUserInput.password,10)
+      // const pass = await bcrypt.hash(signupUserInput.password,10)
       const data = await this.prisma.user.create({
                             data:{
                               username:signupUserInput.username,
                               email:signupUserInput.email,
-                              password:pass,
+                              // password:pass,
                               age:signupUserInput.age
                             }
 
                        })
-      const {password, ...result} = data
-      const access_token = this.jwtService.sign({user: data})
+      const { ...result} = data
+      // const access_token = this.jwtService.sign({user: data})
       return {
-        access_token,
+        // access_token,
         user: {...result}
       }
  }
@@ -60,14 +60,14 @@ export class UsersService {
             throw new BadRequestException("Please provide valid email or password")
 
       }
-        const valid = await bcrypt.compare(loginUserInput.password,user?.password)
+       
      
-        if (user && valid)
+        if (user )
          {
-            const { password, ...result } = user;
-            const access_token = this.jwtService.sign({user:user})
+            const { ...result } = user;
+            // const access_token = this.jwtService.sign({user:user})
             return {
-              access_token,     
+              // access_token,     
               user:{...result}
             }
          

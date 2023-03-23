@@ -4,6 +4,7 @@
 
 input CreateTaskInput {
   name: String!
+  userId: Int!
 }
 
 input GetMails {
@@ -12,7 +13,6 @@ input GetMails {
 
 input LoginUserInput {
   email: String!
-  password: String!
 }
 
 type MailOutput {
